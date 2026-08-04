@@ -24,21 +24,23 @@ class RegistrationState(StatesGroup):
 async def cmd_start(message: types.Message):
     player = get_player(message.from_user.id)
     if player:
+        text = (
+            f"🚘 **Добро пожаловать в BLACK RUSSIA RP!**\n\n"
+            f"С возвращением, **{player['rp_name']}**!"
+        )
         await message.answer(
-            f"🚘 **Добро пожаловать в BLACK RUSSIA RP!**
-
-С возвращением, **{player['rp_name']}**!",
+            text,
             parse_mode="Markdown",
             reply_markup=main_menu_keyboard()
         )
     else:
+        text = (
+            "🚘 **Добро пожаловать в проект BLACK RUSSIA RP**\n\n"
+            "Для начала создайте своего персонажа.\n\n"
+            "Введите ваш RP Никнейм в формате: `Имя_Фамилия`"
+        )
         await message.answer(
-            "🚘 **Добро пожаловать в проект BLACK RUSSIA RP (Telegram Edition)!**
-
-"
-            "Для начала создайте своего персонажа.
-"
-            "Введите ваш RP Никнейм в формате: `Имя_Фамилия` (например, `Ivan_Ivanov`):",
+            text,
             parse_mode="Markdown"
         )
         await RegistrationState.waiting_for_rp_name.set()
