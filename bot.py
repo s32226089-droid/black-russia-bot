@@ -48,21 +48,20 @@ async def cmd_start(message: types.Message):
 @dp.message_handler(state=RegistrationState.waiting_for_rp_name)
 async def process_rp_name(message: types.Message, state: FSMContext):
     rp_name = message.text.strip()
-    if "_" not in rp_name or len(rp_name.split("_")) != 2:
-        await message.answer("❌ Неверный формат! Введите никнейм в формате `Имя_Фамилия` (например, `Sasha_White`):", parse_mode="Markdown")
-        return
     
-    register_player(message.from_user.id, message.from_user.username or "Player", rp_name)
-    await state.finish()
-    await message.answer(
-        f"✅ **Персонаж {rp_name} успешно создан!**
-"
-        f"Вам зачислен стартовый бонус: **10 000 руб.**
+    if "_" not in rp_name:
+        await message.answer("❌ Неверный формат! Введите никнейм в формате: `Имя_Фамилия`", parse_mode="Markdown")
+        return
 
-"
-        "Используйте меню ниже для игры:",
-        parse_mode="Markdown",
-        reply_markup=main_menu_keyboard()
+    register_player(message.from_user.id, rp_name)
+    await state.finish()
+    
+    text = (
+        f"✅ **Персонаж {rp_name} успешно создан!**\n\n"
+        f"Добро пожаловать в игру!"
+    )
+    await message.answer(text, parse_mode="Markdown", reply_markup=main_menu_keyboard())
+
     )
 
 @dp.message_handler(lambda msg: msg.text == "👤 Профиль / Статистика")
